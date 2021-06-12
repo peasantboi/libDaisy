@@ -475,6 +475,9 @@
     <ClCompile Include="src\daisy_petal.cpp">
       <Filter>boards</Filter>
     </ClCompile>
+    <ClCompile Include="src\daisy_terrarium.cpp">
+      <Filter>boards</Filter>
+    </ClCompile>
     <ClCompile Include="src\daisy_pod.cpp">
       <Filter>boards</Filter>
     </ClCompile>
@@ -1080,6 +1083,9 @@
       <Filter>boards</Filter>
     </ClInclude>
     <ClInclude Include="src\daisy_petal.h">
+      <Filter>boards</Filter>
+    </ClInclude>
+    <ClInclude Include="src\daisy_terrarium.h">
       <Filter>boards</Filter>
     </ClInclude>
     <ClInclude Include="src\daisy_pod.h">
