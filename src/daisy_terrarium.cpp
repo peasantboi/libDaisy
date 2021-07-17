@@ -9,24 +9,25 @@ using namespace daisy;
 
 // Hardware related defines.
 // Switches
-#define SW_1_PIN 2
-#define SW_2_PIN 1
-#define SW_3_PIN 0
-#define SW_4_PIN 6
+#define SW_1_PIN 10
+#define SW_2_PIN 9
+#define SW_3_PIN 8
+#define SW_4_PIN 7
 
 // 5 and 6 are footswitches
-#define SW_5_PIN 4
-#define SW_6_PIN 5
+#define SW_5_PIN 25
+#define SW_6_PIN 26
 
 // Knobs
-#define PIN_KNOB_1 0
-#define PIN_KNOB_2 2
-#define PIN_KNOB_3 4
-#define PIN_KNOB_4 1
-#define PIN_KNOB_5 3
-#define PIN_KNOB_6 5
+#define PIN_KNOB_1 16
+#define PIN_KNOB_2 17
+#define PIN_KNOB_3 18
+#define PIN_KNOB_4 19
+#define PIN_KNOB_5 20
+#define PIN_KNOB_6 21
 
 // LEDS
+/* NOTE these are DACs not I2C, need new driver */
 #define LED1_PIN 22
 #define LED2_PIN 23
 
