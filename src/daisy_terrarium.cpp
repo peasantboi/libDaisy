@@ -28,13 +28,8 @@ using namespace daisy;
 
 // LEDS
 /* NOTE these are DACs not I2C, need new driver */
-#define LED1_PIN 22
-#define LED2_PIN 23
-
-static constexpr I2CHandle::Config terrarium_led_i2c_config
-    = {I2CHandle::Config::Peripheral::I2C_1,
-       {{DSY_GPIOB, LED1_PIN}, {DSY_GPIOB, LED2_PIN}},
-       I2CHandle::Config::Speed::I2C_1MHZ};
+#define LED1_DAC_CHN DSY_DAC_CHN2
+#define LED2_DAC_CHN DSY_DAC_CHN1
 
 enum LedOrder
 {
@@ -153,29 +148,33 @@ void DaisyTerrarium::ProcessDigitalControls()
 
 void DaisyTerrarium::ClearLeds()
 {
-    // Using Color
-    //    Color c;
-    //    c.Init(Color::PresetColor::OFF);
-    //    for(size_t i = 0; i < RING_LED_LAST; i++)
-    //    {
-    //        ring_led[i].SetColor(c);
-    //    }
-    for(size_t i = 0; i < FOOTSWITCH_LED_LAST; i++)
-    {
-        SetFootswitchLed(static_cast<FootswitchLed>(i), 0.0f);
-    }
+    SetFootswitchLed(FOOTSWITCH_LED_1, 0.0f);
+    SetFootswitchLed(FOOTSWITCH_LED_2, 0.0f);
 }
 
 void DaisyTerrarium::UpdateLeds()
 {
-    led_driver_.SwapBuffersAndTransmit();
+    /* Do nothing, this seems to be a legacy I2C LED thing */
 }
 
 void DaisyTerrarium::SetFootswitchLed(FootswitchLed idx, float bright)
 {
-    uint8_t fs_addr[FOOTSWITCH_LED_LAST]
-        = {LED_FS_1, LED_FS_2};
-    led_driver_.SetLed(fs_addr[idx], bright);
+    uint16_t val = (bright > 0.5) ? 4095 : 0;
+    
+    switch (idx) {
+        case FOOTSWITCH_LED_1: {
+	       dsy_dac_write(LED1_DAC_CHN, val);
+	       break;
+	}
+	case FOOTSWITCH_LED_2: {
+	       dsy_dac_write(LED2_DAC_CHN, val);
+	       break;
+	}
+	default: {
+		break;
+        }	
+		 
+    }
 }
 
 void DaisyTerrarium::InitSwitches()
@@ -206,11 +205,8 @@ void DaisyTerrarium::InitLeds()
 {
     // LEDs are on the LED Driver.
 
-    // Need to figure out how we want to handle that.
-    uint8_t   addr[2] = {0x00, 0x01};
-    I2CHandle i2c;
-    i2c.Init(terrarium_led_i2c_config);
-    led_driver_.Init(i2c, addr, petal_led_dma_buffer_a, petal_led_dma_buffer_b);
+    dsy_dac_init(&seed.dac_handle, DSY_DAC_CHN_BOTH);
+    dsy_dac_start(DSY_DAC_CHN_BOTH);
     ClearLeds();
     UpdateLeds();
 }
